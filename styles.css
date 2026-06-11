@@ -10,9 +10,10 @@ body {
     margin: 5% auto;
 }
 
+/* FIX 1: Increased container width so rows fit perfectly without breaking */
 .container {
     display: block;
-    width: 360px;
+    width: 400px;
     margin: auto;
 }
 
@@ -29,25 +30,27 @@ body {
     border: 10px solid black;
     border-radius: 20%;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.1s ease, box-shadow 0.1s ease; /* Added box-shadow smooth transition */
 }
 
 .btn:active {
     transform: scale(0.95);
 }
 
-.green { background-color: green; }
-.red { background-color: red; }
-.yellow { background-color: yellow; }
-.blue { background-color: blue; }
+/* Bright, distinct colors for the active buttons */
+.green { background-color: #2ecc71; }
+.red { background-color: #e74c3c; }
+.yellow { background-color: #f1c40f; }
+.blue { background-color: #3498db; }
 
 /* Animation Effects */
+/* FIX 2: Removed 'background-color: grey'. 
+   Instead, we use a brilliant white glow inset and outset to make the original color flash! */
 .pressed {
-    box-shadow: 0 0 20px white;
-    background-color: grey;
+    box-shadow: 0 0 20px 5px #fff, inset 0 0 20px #fff;
 }
 
 .game-over {
-    background-color: red;
-    opacity: 0.8;
+    background-color: #ff4d4d;
+    opacity: 0.9;
 }
