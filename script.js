@@ -5,32 +5,19 @@ let userClickedPattern = [];
 let started = false;
 let level = 0;
 
-// Initialize audio context lazily on user interaction
-let audioCtx = null;
-
-// Audio sound maps (Frequencies in Hz)
-const soundFrequencies = {
-    green: 261.63,  // C4
-    red: 329.63,    // E4
-    yellow: 392.00, // G4
-    blue: 523.25,   // C5
-    wrong: 120.00   // Low buzz
-};
-
-// Start the game on a keypress
+// 1. Start the game on a keypress
 document.addEventListener("keydown", function() {
     if (!started) {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         document.getElementById("level-title").textContent = "Level " + level;
         nextSequence();
         started = true;
     }
 });
 
-// Detect when any game button is clicked
+// 2. Detect when any game button is clicked
 document.querySelectorAll(".btn").forEach(button => {
     button.addEventListener("click", function() {
-        if (!started) return; // Prevent clicks before starting
+        if (!started) return; // Prevent clicks before starting the game
 
         const userChosenColor = this.id;
         userClickedPattern.push(userChosenColor);
@@ -43,7 +30,7 @@ document.querySelectorAll(".btn").forEach(button => {
     });
 });
 
-// Check if user pattern matches game pattern
+// 3. Check if user pattern matches game pattern
 function checkAnswer(currentLevel) {
     if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
         // If user finished the current sequence round
@@ -67,7 +54,7 @@ function checkAnswer(currentLevel) {
     }
 }
 
-// Generate the next step in the sequence
+// 4. Generate the next step in the sequence
 function nextSequence() {
     userClickedPattern = [];
     level++;
@@ -83,24 +70,11 @@ function nextSequence() {
     playSound(randomChosenColor);
 }
 
-// Helper: Synthesize arcade sound frequencies
-function playSound(color) {
-    if (!audioCtx) return;
-    
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    
-    osc.type = color === "wrong" ? "sawtooth" : "triangle";
-    osc.frequency.setValueAtTime(soundFrequencies[color], audioCtx.currentTime);
-    
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-    
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.4);
+// 5. Play sound files dynamically using relative paths
+function playSound(name) {
+    // Correct relative path syntax for seamless local and GitHub deployment
+    const audio = new Audio("sounds/" + name + ".mp3");
+    audio.play();
 }
 
 // Helper: Visual Flash effect for game patterns
